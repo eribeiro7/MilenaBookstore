@@ -52,8 +52,10 @@ module.exports = {
         if (errors.length) {
             return res.status(400).json({ errors });
         }
+        
         const { fullname, username, password, created_at, updated_at } = req.body;
-        let user = await User.store(fullname, username, password, created_at, updated_at);
+        let hashedPassword = await bcrypt.hash(password, 8);
+        let user = await User.store(fullname, username, hashedPassword, created_at, updated_at);
         json.result = {
             id: user,
             fullname,
@@ -69,34 +71,41 @@ module.exports = {
         let json = { result: {} };
         let id = req.params.id;
         let fullname = req.body.fullname;
-        let username = req.body.username;
         let password = req.body.password;
         let created_at = req.body.created_at;
         let updated_at = req.body.updated_at;
-        if (fullname && username && id) {
-            await User.update(id, fullname, username, password, created_at, updated_at);
-            json.result = {
+        const keys = ['fullname'];
+        const errors = requiredFieldsValidator(keys, req.body);
+        if (errors.length) {
+            return res.status(400).json({ errors });
+        }
+        const user = await User.find(id);
+        if(!user){
+            return res.status(400).json({ msg: 'Utilizador não foi encontrado.' });
+        }
+        await User.update(id, fullname, password, created_at, updated_at);
+        json.result = {
                 id,
                 fullname,
-                username,
                 password,
                 created_at,
                 updated_at
             }
-        } else {
-            json.status(400).json({msg: 'Campos não foram enviados'});
-        }
         res.status(200).json(json);
     },
     destroy: async (req, res) => {
-        let json = { error: '', result: {} };
-        await User.destroy(req.params.id);
-
-        res.json(json);
+        let json = { result: {} };
+        const id = req.params.id;
+        const user = await User.find(id);
+        if(!user){
+            return res.status(400).json({ msg: 'Utilizador não foi encontrado.' });
+        }
+        await User.destroy(id);
+        res.status(200).json(json);
     },
     
     findByUsername: async (req, res) => {
-        let json = { error: '', result: {} };
+        let json = { result: {} };
         let username = req.body.username;
         let user = await User.findByUsername(username);
         if (user) {
@@ -108,11 +117,10 @@ module.exports = {
         const username = req.body.username;
         const password = req.body.password;
 
-        if (!username) {
-            return res.status(422).json({ msg: 'O username é obrigatória.' });
-        }
-        if (!password) {
-            return res.status(422).json({ msg: 'A senha é obrigatória.' });
+        const keys = ['username', 'password'];
+        const errors = requiredFieldsValidator(keys, req.body);
+        if (errors.length) {
+            return res.status(422).json({ errors });
         }
 
         let user = await User.findByUsername(username);
@@ -120,7 +128,7 @@ module.exports = {
             return res.status(422).json({ msg: 'Utilizador não encontrado.' });
         }
         const checkPassword = await bcrypt.compare(password, user.PASSWORD);
-
+        console.log(checkPassword);
         if (!checkPassword) {
             return res.status(422).json({ msg: 'Senha incorrecta.' });
         }

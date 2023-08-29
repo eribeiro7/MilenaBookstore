@@ -37,9 +37,9 @@ module.exports = {
             });
         });
     },
-    update: (id, fullname, username, password, created_at, updated_at) => {
+    update: (id, fullname, password, created_at, updated_at) => {
         return new Promise((aceito, rejeitado) => {
-            db.query('UPDATE users SET FULLNAME = ?, USERNAME = ?, PASSWORD = ?, CREATED_AT = ?, UPDATED_AT = ? WHERE ID = ?', [fullname, username, password, created_at, updated_at, id], (error, results)=>{
+            db.query('UPDATE users SET FULLNAME = ?, PASSWORD = ?, CREATED_AT = ?, UPDATED_AT = ? WHERE ID = ?', [fullname, password, created_at, updated_at, id], (error, results)=>{
                 if(error){
                     rejeitado(error);
                     return;
