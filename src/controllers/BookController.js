@@ -74,21 +74,24 @@ module.exports = {
     update: async (req, res) => {
         let json = { result: {} };
         let id = req.params.id;
-        let name = req.body.name;
+        let isbn = req.body.isbn;
+        let tittle = req.body.tittle;
+        let author_id = req.body.author_id;
         let updated_at = req.body.updated_at;
         const keys = ['tittle'];
         const errors = requiredFieldsValidator(keys, req.body);
-        if (errors.length) {
-            return res.status(400).json({ errors });
+        if (!tittle && !author_id && !isbn ) {
+            return res.status(400).json({ msg: 'Pelo menos um dos campos deve ser preenchido.' });
         }
-        const author = await Author.find(id);
-        if(!author){
+        const book = await Book.find(id);
+        if(!book){
             return res.status(400).json({ msg: 'Utilizador não foi encontrado.' });
         }
-        await Author.update(id, name, updated_at);
+        await Book.update(tittle, author_id, isbn, updated_at, id);
         json.result = {
                 id,
-                name,
+                tittle,
+                isbn,
                 updated_at
             }
         res.status(200).json(json);
@@ -96,11 +99,11 @@ module.exports = {
     destroy: async (req, res) => {
         let json = { result: {} };
         const id = req.params.id;
-        const author = await Author.find(id);
-        if(!author){
+        const book = await Book.find(id);
+        if(!book){
             return res.status(400).json({ msg: 'Utilizador não foi encontrado.' });
         }
-        await Author.destroy(id);
+        await Book.destroy(id);
         res.status(200).json(json);
     },
     findByIsbn: async (req, res) => {

@@ -34,7 +34,7 @@ router.delete('/author/:id', AuthorController.destroy);
 router.get('/books', BookController.all);
 router.get('/book/:id', BookController.find);
 router.post('/book', BookController.store);
-router.put('/author/:id', AuthorController.update);
-router.delete('/author/:id', AuthorController.destroy);
+router.put('/book/:id', BookController.update);
+router.delete('/book/:id', BookController.destroy);
 
 module.exports = router;

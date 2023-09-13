@@ -6,12 +6,15 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.1",
+    "knex": "^2.5.1",
     "mysql": "^2.18.1",
+    "mysql2": "^3.6.0",
     "node-fetch": "^2.7.0",
     "nodemon": "^3.0.1"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "knex": "knex=/home/USER/nodevenv/APP/8/lib/node_modules/knex/bin/cli.js"
   },
   "name": "milenabookstore",
   "version": "1.0.0",
@@ -19,5 +22,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "sequelize-cli": "^6.6.1"
+  }
 }

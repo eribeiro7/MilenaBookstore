@@ -37,7 +37,7 @@ module.exports = {
             });
         });
     },
-    update: (id, tittle, author_id, isbn, updated_at) => {
+    update: (tittle, author_id, isbn, updated_at, id) => {
         return new Promise((aceito, rejeitado) => {
             db.query('UPDATE books SET TITTLE = ?, AUTHOR_ID = ?, ISBN = ?, UPDATED_AT = ? WHERE ID = ?', [tittle, author_id, isbn, updated_at, id], (error, results)=>{
                 if(error){
