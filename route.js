@@ -5,6 +5,7 @@ const UserController = require('./src/controllers/UserController');
 const CountryController = require('./src/controllers/CountryController');
 const AuthorController = require('./src/controllers/AuthorController');
 const BookController = require('./src/controllers/BookController');
+const RoleController = require('./src/controllers/RoleController');
 
 //Rotas para os users
 router.get('/users', UserController.all);
@@ -36,5 +37,8 @@ router.get('/book/:id', BookController.find);
 router.post('/book', BookController.store);
 router.put('/book/:id', BookController.update);
 router.delete('/book/:id', BookController.destroy);
+
+router.get('/roles', RoleController.all);
+router.get('/role/:id', RoleController.show);
 
 module.exports = router;
